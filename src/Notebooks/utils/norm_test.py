@@ -2,6 +2,7 @@ import pandas as pd
 from scipy import stats
 from scipy.stats import anderson
 from scipy.stats import wilcoxon
+from scipy.stats import mannwhitneyu
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -71,3 +72,32 @@ def test_hipotesis_Wilcoxon(data1,data2,a):
 def distribuitionGaus(data, name):
     #densidade, método kdeplot para densidade
     sns.kdeplot(data, color='blue').set(title=name)
+    
+
+def analise_pareada(df, variavel, grupo="Status_Cliente"):
+    
+    grupo1 = df[df[grupo] == "Cliente Ativo"][variavel]
+    grupo2 = df[df[grupo] == "Cliente Cancelado"][variavel]
+    
+    # Medianas
+    mediana_ativo = grupo1.median()
+    mediana_cancelado = grupo2.median()
+    
+    # Teste Mann–Whitney
+    stat, p = mannwhitneyu(grupo1, grupo2)
+    
+    # Tamanho de efeito (rank-biserial)
+    n1 = len(grupo1)
+    n2 = len(grupo2)
+    r = 1 - (2 * stat) / (n1 * n2)
+    
+    return {
+        "Variavel": variavel,
+        "Mediana_Ativo": mediana_ativo,
+        "Mediana_Cancelado": mediana_cancelado,
+        "U": stat,
+        "p_valor": p,
+        "r": r
+    }    
+    
+
