@@ -1,5 +1,7 @@
 import pandas as pd
 from scipy import stats
+import numpy as np
+
 from utils.general import catchPath
 
 from scipy.stats import mannwhitneyu
@@ -98,3 +100,52 @@ def makeBarPlot(df, variavel, titulo_graf, titulo_arq):
     n = catchPath(f'image/{titulo_arq}.png')
     plt.savefig(n, dpi=300, bbox_inches='tight')
     plt.show()
+
+    import pandas as pd
+
+
+def calcular_confianca_amostral(N, n, e=0.05):
+    """
+    Calcula o nível de confiança estatística de uma amostra em uma população finita.
+    
+    Parâmetros:
+    N (int): Tamanho total da população.
+    n (int): Tamanho da amostra utilizada.
+    e (float): Margem de erro (padrão 0.05 para 5%).
+    
+    Retorna:
+    pd.DataFrame: Tabela com os parâmetros calculados.
+    """
+    p = 0.5  # Máxima variabilidade (cenário conservador)
+    
+    # 1. Cálculo do Escore-Z invertendo a fórmula da amostra finita
+    # Z = sqrt( (n * e^2 * (N-1)) / (p * (1-p) * (N-n)) )
+    numerador = n * (e**2) * (N - 1)
+    denominador = p * (1 - p) * (N - n)
+    z_calculado = np.sqrt(numerador / denominador)
+    
+    # 2. Cálculo do Nível de Confiança baseado no Z (Distribuição Normal)
+    # stats.norm.cdf(z) nos dá a área à esquerda; transformamos para o intervalo central
+    confianca = (2 * stats.norm.cdf(z_calculado) - 1) * 100
+    
+    # 3. Formatação dos dados para o DataFrame
+    percentual_amostra = (n / N) * 100
+    
+    df_resultado = pd.DataFrame({
+        "Parâmetro": [
+            "População Total (N)",
+            "Tamanho da Amostra (n)",
+            "Margem de Erro (e)",
+            "Escore-Z calculado",
+            "Nível de Confiança"
+        ],
+        "Valor": [
+            f"{N:,}".replace(",", "."),
+            f"{n:,} ({percentual_amostra:.1f}%)".replace(",", "."),
+            f"{e*100:.1f}%",
+            f"{z_calculado:.2f}",
+            f"{confianca:.1f}%"
+        ]
+    })
+    
+    return df_resultado
