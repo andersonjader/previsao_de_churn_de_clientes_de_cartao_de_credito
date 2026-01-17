@@ -203,5 +203,5 @@ O projeto inclui um **Motor de Decisão** que converte as probabilidades do mode
 ## 👤 Autor
 
 **Anderson Jader**  
-Ciência de Dados | Estatística | Machine Learning
+Graduando em Ciência de Dados | Estatística | Machine Learning
 
