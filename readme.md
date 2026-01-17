@@ -34,6 +34,7 @@ Para garantir a reprodutibilidade total, o projeto foi desenvolvido utilizando a
 
 ## 🗂️ Estrutura do Repositório
 
+```text
 previsao_de_churn_de_clientes_de_cartao_de_credito/
 │
 ├── data/
@@ -52,7 +53,7 @@ previsao_de_churn_de_clientes_de_cartao_de_credito/
 │ └── pipeline_final.joblib
 │
 └── README.md
-
+```
 
 ---
 
